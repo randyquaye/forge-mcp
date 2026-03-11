@@ -1,0 +1,20 @@
+/**
+ * {{description}}
+ *
+ * Middleware pattern for MCP servers: wrap tool handlers to add
+ * cross-cutting concerns (logging, auth, rate limiting, etc.)
+ */
+export function {{middlewareName}}({{#if hasConfig}}config: {{configType}}{{/if}}) {
+  return function <T>(handler: (args: T, ctx: any) => Promise<any>) {
+    return async (args: T, ctx: any) => {
+      // Pre-execution logic
+      await ctx.mcpReq.log("debug", "{{middlewareName}} running");
+
+      const result = await handler(args, ctx);
+
+      // Post-execution logic
+
+      return result;
+    };
+  };
+}

@@ -1,0 +1,69 @@
+import { McpServer, StdioServerTransport{{#if useStreamableHttp}}, NodeStreamableHTTPServerTransport{{/if}}{{#if hasResourceTemplates}}, ResourceTemplate{{/if}} } from "@modelcontextprotocol/server";
+import { z } from "zod";
+{{#each toolImports}}
+import { {{schemaName}}, {{handlerName}} } from "./tools/{{fileName}}.js";
+{{/each}}
+{{#each resourceImports}}
+import { {{handlerName}} } from "./resources/{{fileName}}.js";
+{{/each}}
+{{#each promptImports}}
+import { {{argsName}}, {{handlerName}} } from "./prompts/{{fileName}}.js";
+{{/each}}
+
+const server = new McpServer({
+  name: "{{serverName}}",
+  version: "{{version}}",
+});
+
+// ─── Tools ────────────────────────────────────────────────────────────
+{{#each tools}}
+server.registerTool(
+  "{{name}}",
+  {
+    description: "{{description}}",
+    inputSchema: {{schemaName}},
+    {{#if outputSchema}}outputSchema: {{outputSchemaName}},{{/if}}
+  },
+  {{handlerName}}
+);
+{{/each}}
+
+// ─── Resources ────────────────────────────────────────────────────────
+{{#each staticResources}}
+server.registerResource(
+  "{{key}}",
+  "{{uri}}",
+  { description: "{{description}}", mimeType: "{{mimeType}}" },
+  {{handlerName}}
+);
+{{/each}}
+{{#each templateResources}}
+server.registerResource(
+  "{{key}}",
+  new ResourceTemplate("{{uriTemplate}}", { list: {{listFn}} }),
+  { description: "{{description}}", mimeType: "{{mimeType}}" },
+  {{handlerName}}
+);
+{{/each}}
+
+// ─── Prompts ──────────────────────────────────────────────────────────
+{{#each prompts}}
+server.registerPrompt(
+  "{{name}}",
+  {
+    description: "{{description}}",
+    argsSchema: {{argsName}},
+  },
+  {{handlerName}}
+);
+{{/each}}
+
+// ─── Transport ────────────────────────────────────────────────────────
+{{#if useStreamableHttp}}
+const transport = new NodeStreamableHTTPServerTransport({
+  sessionIdGenerator: undefined,
+});
+{{else}}
+const transport = new StdioServerTransport();
+{{/if}}
+await server.connect(transport);

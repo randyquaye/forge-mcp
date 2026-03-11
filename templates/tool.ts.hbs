@@ -1,0 +1,37 @@
+import { z } from "zod";
+import type { CallToolResult } from "@modelcontextprotocol/server";
+
+/**
+ * {{description}}
+ */
+export const {{schemaName}} = z.object({
+  {{#each inputs}}
+  {{name}}: z.{{zodType}}(){{#each constraints}}.{{this}}{{/each}}.describe("{{description}}"),
+  {{/each}}
+});
+
+export async function {{handlerName}}(
+  args: z.infer<typeof {{schemaName}}>,
+  ctx: { mcpReq: { log: (level: string, data: string) => Promise<void> } }
+): Promise<CallToolResult> {
+  await ctx.mcpReq.log("info", "{{toolName}} called");
+
+  try {
+    {{#if needsProvider}}
+    // TODO: Initialize or import {{providerKey}} client
+    {{/if}}
+
+    // TODO: Implement {{toolName}} logic
+    const result = {};
+
+    return {
+      content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+    };
+  } catch (err) {
+    await ctx.mcpReq.log("error", `{{toolName}} failed: ${err instanceof Error ? err.message : String(err)}`);
+    return {
+      content: [{ type: "text", text: "Failed to {{actionVerb}}. Please try again." }],
+      isError: true,
+    };
+  }
+}

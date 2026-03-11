@@ -1,0 +1,24 @@
+/**
+ * {{description}}
+ */
+export async function {{handlerName}}(
+  uri: URL,
+  {{#if isTemplate}}params: Record<string, string>,{{/if}}
+) {
+  {{#if needsProvider}}
+  // TODO: Initialize or import {{providerKey}} client
+  {{/if}}
+
+  // TODO: Implement resource read logic
+  const data = {};
+
+  return {
+    contents: [
+      {
+        uri: uri.href,
+        mimeType: "{{mimeType}}",
+        text: JSON.stringify(data, null, 2),
+      },
+    ],
+  };
+}

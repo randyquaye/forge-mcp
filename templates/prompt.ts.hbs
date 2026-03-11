@@ -1,0 +1,24 @@
+import { z } from "zod";
+
+/**
+ * {{description}}
+ */
+export const {{argsName}} = z.object({
+  {{#each args}}
+  {{name}}: z.{{zodType}}(){{#each constraints}}.{{this}}{{/each}}.describe("{{description}}"),
+  {{/each}}
+});
+
+export function {{handlerName}}(args: z.infer<typeof {{argsName}}>) {
+  return {
+    messages: [
+      {
+        role: "user" as const,
+        content: {
+          type: "text" as const,
+          text: `{{promptTemplate}}`,
+        },
+      },
+    ],
+  };
+}

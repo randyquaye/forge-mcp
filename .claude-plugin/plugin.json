@@ -1,0 +1,10 @@
+{
+  "name": "forge-mcp",
+  "description": "Build enterprise-grade MCP servers with guided discovery, security audits, and code generation. Provides skills, agents, and templates for any Claude agent to scaffold production-ready Model Context Protocol servers.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Randy Quaye"
+  },
+  "repository": "https://github.com/randyquaye/forge-mcp",
+  "license": "MIT"
+}

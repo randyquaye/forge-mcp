@@ -1,0 +1,52 @@
+{
+  "hooks": [
+    {
+      "id": "tool-file-security-reminder",
+      "name": "Security Reminder on Tool Changes",
+      "description": "Remind to run /audit when tool handler files are created or modified",
+      "matcher": {
+        "type": "PostToolUse",
+        "tools": ["Write", "Edit"]
+      },
+      "hooks": [
+        {
+          "script": "if echo \"$TOOL_INPUT\" | grep -q 'src/tools/'; then echo '⚠ Tool file modified. Run /forge-mcp:mcp-audit to check for security issues.' >&2; fi",
+          "async": true,
+          "timeout": 3000
+        }
+      ]
+    },
+    {
+      "id": "server-entry-typecheck",
+      "name": "Typecheck on Server Entry Changes",
+      "description": "Run typecheck when the main server file is modified",
+      "matcher": {
+        "type": "PostToolUse",
+        "tools": ["Write", "Edit"]
+      },
+      "hooks": [
+        {
+          "script": "if echo \"$TOOL_INPUT\" | grep -q 'src/index.ts'; then echo '⚠ Server entry modified. Run npm run typecheck to verify.' >&2; fi",
+          "async": true,
+          "timeout": 3000
+        }
+      ]
+    },
+    {
+      "id": "schema-validation-check",
+      "name": "Schema Validation Check",
+      "description": "Warn if a tool file is written without .describe() on schema fields",
+      "matcher": {
+        "type": "PostToolUse",
+        "tools": ["Write"]
+      },
+      "hooks": [
+        {
+          "script": "if echo \"$TOOL_INPUT\" | grep -q 'src/tools/'; then FILE=$(echo \"$TOOL_INPUT\" | grep -o 'src/tools/[^ ]*\\.ts'); if [ -f \"$FILE\" ] && ! grep -q '.describe(' \"$FILE\"; then echo '⚠ Tool schema missing .describe() on fields. Every field needs a description for AI consumption.' >&2; fi; fi",
+          "async": true,
+          "timeout": 5000
+        }
+      ]
+    }
+  ]
+}

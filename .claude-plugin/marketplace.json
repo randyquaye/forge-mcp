@@ -1,0 +1,14 @@
+{
+  "name": "forge-mcp-marketplace",
+  "owner": {
+    "name": "Randy Quaye"
+  },
+  "plugins": [
+    {
+      "name": "forge-mcp",
+      "source": ".",
+      "description": "Build enterprise-grade MCP servers with guided discovery, security audits, and code generation",
+      "version": "0.1.0"
+    }
+  ]
+}

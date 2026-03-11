@@ -1,0 +1,50 @@
+import { describe, it, expect } from "vitest";
+import { McpServer, StdioServerTransport } from "@modelcontextprotocol/server";
+import { {{schemaName}}, {{handlerName}} } from "../src/tools/{{fileName}}.js";
+
+describe("{{toolName}}", () => {
+  describe("input validation", () => {
+    it("accepts valid input", () => {
+      const result = {{schemaName}}.safeParse({
+        {{#each validInputs}}
+        {{name}}: {{value}},
+        {{/each}}
+      });
+      expect(result.success).toBe(true);
+    });
+
+    it("rejects missing required fields", () => {
+      const result = {{schemaName}}.safeParse({});
+      expect(result.success).toBe(false);
+    });
+
+    {{#each requiredInputs}}
+    it("rejects invalid type for {{name}}", () => {
+      const result = {{schemaName}}.safeParse({ {{name}}: {{invalidValue}} });
+      expect(result.success).toBe(false);
+    });
+    {{/each}}
+  });
+
+  describe("handler", () => {
+    const mockCtx = {
+      mcpReq: {
+        log: async () => {},
+      },
+    };
+
+    it("returns expected result with valid input", async () => {
+      const result = await {{handlerName}}(
+        {
+          {{#each validInputs}}
+          {{name}}: {{value}},
+          {{/each}}
+        },
+        mockCtx
+      );
+      expect(result.content).toBeDefined();
+      expect(result.content.length).toBeGreaterThan(0);
+      expect(result.isError).toBeFalsy();
+    });
+  });
+});
