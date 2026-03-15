@@ -4,8 +4,9 @@
       "matcher": "Write|Edit",
       "hooks": [
         {
+          "type": "command",
           "command": "if echo \"$TOOL_INPUT\" | grep -q 'src/tools/'; then echo '⚠ Tool file modified. Run /forge-mcp:mcp-audit to check for security issues.' >&2; fi",
-          "timeout": 3000
+          "timeout": 3
         }
       ]
     },
@@ -13,8 +14,9 @@
       "matcher": "Write|Edit",
       "hooks": [
         {
+          "type": "command",
           "command": "if echo \"$TOOL_INPUT\" | grep -q 'src/index.ts'; then echo '⚠ Server entry modified. Run npm run typecheck to verify.' >&2; fi",
-          "timeout": 3000
+          "timeout": 3
         }
       ]
     },
@@ -22,8 +24,9 @@
       "matcher": "Write",
       "hooks": [
         {
+          "type": "command",
           "command": "if echo \"$TOOL_INPUT\" | grep -q 'src/tools/'; then FILE=$(echo \"$TOOL_INPUT\" | grep -o 'src/tools/[^ ]*\\.ts'); if [ -f \"$FILE\" ] && ! grep -q '.describe(' \"$FILE\"; then echo '⚠ Tool schema missing .describe() on fields. Every field needs a description for AI consumption.' >&2; fi; fi",
-          "timeout": 5000
+          "timeout": 5
         }
       ]
     }
