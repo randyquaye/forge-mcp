@@ -57,6 +57,38 @@ Understand what data lives on the filesystem.
 - Log files
 - Cache directories
 
+### 7. Project Documentation
+Search for existing documentation that can inform tool descriptions and help AI agents understand the domain. This is critical — good tool descriptions come from understanding the project's own docs.
+
+**Locations to scan:**
+- `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md` at project root
+- `docs/`, `documentation/`, `wiki/`, `api-docs/`, `guides/` directories
+- Any `.md` files in the project (excluding `node_modules/`, `dist/`, `.git/`)
+
+**API documentation to detect:**
+- OpenAPI/Swagger specs: `.yaml`/`.json` files containing `openapi:` or `swagger:` keys
+- GraphQL schema files (`.graphql`, `.gql`)
+- Postman collections (`*.postman_collection.json`)
+- API Blueprint files (`.apib`)
+
+**Inline documentation:**
+- JSDoc/TSDoc comments on public functions and classes in `src/`, `lib/`
+- Type definitions in `.d.ts` files that describe the domain model
+- Zod schemas with `.describe()` already present in the codebase
+
+**What to extract:**
+- Domain terminology and entity definitions (what is a "workspace"? what is an "organization"?)
+- API usage patterns and workflows (how does auth work? what's the typical CRUD flow?)
+- Relationships between entities (a user belongs to an org, an org has many projects)
+- Error scenarios and edge cases documented in guides
+- Rate limits, pagination patterns, or other constraints mentioned in docs
+
+**Classification:**
+- `api-reference`: OpenAPI specs, endpoint docs, parameter references
+- `guide`: How-to docs, tutorials, getting started pages
+- `conceptual`: Architecture docs, design decisions, domain explanations
+- `inline`: JSDoc/TSDoc extracted from source code
+
 ## Classification Rules
 
 **Make it a TOOL when:**
@@ -82,6 +114,19 @@ Present your findings as a structured recommendation:
 
 ```
 ## Discovered Capabilities
+
+### Documentation Found
+| Type | Location | Content Summary |
+|------|----------|----------------|
+| api-reference | docs/api/openapi.yaml | REST API spec — 12 endpoints, user/org/project entities |
+| guide | docs/guides/authentication.md | Auth flow: API keys + OAuth2, token refresh patterns |
+| conceptual | README.md | Project overview, architecture, entity relationships |
+| inline | src/services/billing.ts | JSDoc on charge(), refund(), getInvoice() methods |
+
+> These docs will be used to write rich tool descriptions. Key domain concepts found:
+> - [List 3-5 key domain terms and their meanings from the docs]
+> - [List any multi-step workflows described in guides]
+> - [List any constraints, rate limits, or gotchas mentioned]
 
 ### Recommended Tools
 | Name | Description | Source | Inputs | Notes |
@@ -116,3 +161,5 @@ Present your findings as a structured recommendation:
 3. **Be conservative.** It's better to recommend fewer, well-designed tools than many poorly-scoped ones.
 4. **Consider the AI's perspective.** What would be most useful for an AI assistant helping a developer with this project?
 5. **Note dependencies.** For each recommendation, note what DI providers or external access it needs.
+6. **Always scan for docs first.** Before recommending tools, read the project's existing documentation. Use what you find to write tool descriptions that include domain context, usage patterns, and relationships between operations. A tool description informed by the project's own docs is worth ten generic ones.
+7. **Surface documentation gaps.** If the project has no docs, or docs don't cover key APIs, note this. The generated tool descriptions will be the only guidance an AI agent has.

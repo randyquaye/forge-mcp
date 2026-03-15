@@ -26,6 +26,30 @@ If the user is vague, help them refine:
 > - `get-user` — Get a single user by ID
 > - `create-user` — Create a new user record
 
+### Step 1.5: Research Project Documentation
+
+Before writing any code, search the project's existing documentation for context about the feature this tool wraps. This step directly improves the quality of tool descriptions and parameter descriptions.
+
+**Search for relevant docs:**
+1. Look for markdown files in `docs/`, `wiki/`, `README.md`, or any documentation directory
+2. Search for OpenAPI/Swagger specs that describe the endpoint this tool wraps
+3. Search source code for JSDoc/TSDoc comments on the function/service this tool calls
+4. Look for existing usage examples, guides, or tutorials that mention this feature
+
+**Extract and note:**
+- **Domain terminology**: What does the project call things? Use the same terms in descriptions (e.g., if the project says "workspace" not "project", the tool should say "workspace")
+- **Usage patterns**: How is this feature typically used? What comes before/after it in a workflow?
+- **Related operations**: What other tools/APIs does this feature interact with? (e.g., "use `get-user` to verify the user exists before calling `assign-role`")
+- **Constraints and gotchas**: Rate limits, pagination requirements, required preconditions, common error scenarios
+- **Error scenarios**: What errors does the API return? What do they mean? How should the caller handle them?
+
+**Apply what you find:**
+- Use doc insights to write the tool `description` in Step 5 (registration) — not just "what it does" but "when to use it, what to expect, and what to do next"
+- Use doc insights to write better `.describe()` strings on Zod fields in Step 2 — include valid values, formats, and domain context
+- If the docs describe a multi-step workflow that includes this tool, mention the workflow in the tool description (e.g., "Part of the user onboarding flow: create-user → assign-roles → send-welcome-email")
+
+If no relevant documentation is found, note this and write the best descriptions you can from the code. Flag to the user that adding docs would improve the AI agent experience.
+
 ### Step 2: Design the Schema
 
 Design the Zod input schema following the security baseline:

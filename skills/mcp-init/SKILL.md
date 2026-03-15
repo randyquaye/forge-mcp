@@ -112,6 +112,16 @@ For each tool, generate a file (see `templates/tool.ts.hbs` for reference):
 - Error handling returning `{ content: [...], isError: true }` for user-facing errors
 - Export schema and handler separately for testing
 
+**Writing descriptions — use project docs.** If documentation was found during discovery (Step 2), use it to write tool descriptions that go beyond the generic. Each tool description should include:
+- What the tool does (the basics)
+- When to use it vs alternatives (e.g., "Use `search-users` for partial matches; use `get-user` when you have the exact ID")
+- What the return value contains and its structure
+- Common workflows this tool participates in (e.g., "Typically called after `create-order` to attach line items")
+- Domain-specific context from the project's own docs (e.g., "A 'workspace' is the top-level container — all projects and members belong to a workspace")
+- Error scenarios the caller should handle (e.g., "Returns isError if the user has been soft-deleted")
+
+Each `.describe()` on Zod fields should similarly use domain context — not just "The user ID" but "The user's UUID (found in the response from create-user or search-users)".
+
 #### 4d. Test files
 
 For each tool, generate a test file using `templates/test-tool.ts.hbs`:
@@ -180,4 +190,4 @@ Tell the user:
 - **Ask, don't assume.** When in doubt about what to expose, ask the user.
 - **Secure by default.** Include validation, timeouts, and error handling in every generated tool.
 - **Test everything.** Every tool gets a test file. The server gets an integration test.
-- **Document for AI.** Tool descriptions and parameter descriptions should be clear enough for an AI model to use correctly without additional context.
+- **Document for AI, informed by project docs.** Tool descriptions and parameter descriptions should be clear enough for an AI model to use correctly without additional context. Always read the project's existing documentation (README, API docs, guides, OpenAPI specs) before writing descriptions. The generated MCP server's tool descriptions are the *only* guidance an AI agent will have — they must carry the domain knowledge that would otherwise require reading the docs.

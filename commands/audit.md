@@ -19,8 +19,9 @@ Comprehensive review of an existing MCP server.
 2. Spawn **security** agent — check for injection, validation gaps, credential exposure, transport auth
 3. Spawn **performance** agent — check for pooling, timeouts, concurrency, memory, shutdown
 4. Check correctness — descriptions, MIME types, schema completeness
-5. Generate severity-ranked report
-6. Offer to fix findings
+5. Check description quality — flag thin descriptions, missing usage guidance, generic parameter descriptions, and descriptions not informed by project docs
+6. Generate severity-ranked report
+7. Offer to fix findings
 
 ## Verdicts
 - **PASS** — No critical or high findings

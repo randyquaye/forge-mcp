@@ -32,15 +32,23 @@ Read the project's top-level structure and key configuration files:
 
 Follow the checklist from the Discovery Agent (`agents/discovery.md`):
 
-1. **API Routes**: Search for HTTP route definitions across the codebase. Use Grep for patterns like `app.get`, `app.post`, `router.`, `@Get(`, `@Post(`, `server.route`, and file paths like `api/`, `routes/`.
+1. **Project Documentation** *(do this first)*: Scan for existing docs before analyzing code. Search for:
+   - `README.md`, `CONTRIBUTING.md`, and any `.md` files at the root
+   - `docs/`, `documentation/`, `wiki/`, `api-docs/`, `guides/` directories
+   - OpenAPI/Swagger specs (`.yaml`/`.json` files with `openapi:` or `swagger:` keys)
+   - JSDoc/TSDoc comments on public functions in `src/`, `lib/`
 
-2. **Database Models**: Search for schema/model definitions. Look for Prisma `model`, Drizzle `table()`, TypeORM `@Entity`, Mongoose `Schema`, or raw SQL migrations.
+   Read any docs found. Extract domain terminology, entity relationships, API usage patterns, multi-step workflows, constraints, and error scenarios. This context is essential for writing good tool descriptions later.
 
-3. **Service Layer**: Search for files in `services/`, `lib/`, `utils/` or classes ending in `Service`, `Manager`, `Repository`.
+2. **API Routes**: Search for HTTP route definitions across the codebase. Use Grep for patterns like `app.get`, `app.post`, `router.`, `@Get(`, `@Post(`, `server.route`, and file paths like `api/`, `routes/`.
 
-4. **CLI Commands**: Search for commander/yargs command definitions, or bin entries in package.json.
+3. **Database Models**: Search for schema/model definitions. Look for Prisma `model`, Drizzle `table()`, TypeORM `@Entity`, Mongoose `Schema`, or raw SQL migrations.
 
-5. **Configuration**: Identify .env variables (keys only), config files, constants.
+4. **Service Layer**: Search for files in `services/`, `lib/`, `utils/` or classes ending in `Service`, `Manager`, `Repository`.
+
+5. **CLI Commands**: Search for commander/yargs command definitions, or bin entries in package.json.
+
+6. **Configuration**: Identify .env variables (keys only), config files, constants.
 
 ### Step 4: Classify Discoveries
 
@@ -68,6 +76,22 @@ Present a structured table to the user:
 - Framework: [Express/Fastify/etc.]
 - Database: [PostgreSQL/MongoDB/etc.]
 - ORM: [Prisma/Drizzle/etc.]
+
+### Documentation Found
+| Type | Location | Summary |
+|------|----------|---------|
+| api-reference | docs/api/openapi.yaml | REST API spec — N endpoints covering [entities] |
+| guide | docs/guides/auth.md | Auth flow walkthrough, token refresh patterns |
+| conceptual | README.md | Architecture overview, entity relationships |
+| inline | src/services/*.ts | JSDoc on key service methods |
+
+Key domain context extracted:
+- [Domain terms and their meanings]
+- [Multi-step workflows described in docs]
+- [Constraints, rate limits, or gotchas]
+
+> This documentation will be used to write rich tool descriptions during server generation.
+> If no docs were found, note: "No project documentation found. Tool descriptions will be based on code analysis only. Consider adding docs to improve AI agent experience."
 
 ### Recommended Tools (N found)
 | # | Name | Description | Source File | Inputs | DI Needed |

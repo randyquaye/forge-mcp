@@ -73,6 +73,19 @@ Check MCP protocol compliance and best practices:
 - [ ] Tests exist and pass
 - [ ] TypeScript compiles without errors
 
+### Step 5.5: Description Quality Audit
+
+Check that tool descriptions are substantive enough for an AI agent to use correctly without external documentation. For each tool:
+
+- [ ] **Description length**: Flag descriptions under 20 words as `[HIGH] Thin description`. A good description is 2-4 sentences.
+- [ ] **When-to-use guidance**: Description should explain when to use this tool vs alternatives (e.g., "Use search-users for partial matches; use get-user when you have the exact ID"). Flag if missing as `[MEDIUM] Missing usage guidance`.
+- [ ] **Return value described**: Description should mention what the return value contains. Flag if missing as `[MEDIUM] Return value not described`.
+- [ ] **Parameter descriptions**: Each `.describe()` should include more than just the field name restated. Flag `.describe("The user ID")` or `.describe("query")` as `[MEDIUM] Generic parameter description` — it should say something like `.describe("The user's UUID, found in the response from create-user or search-users")`.
+- [ ] **Domain context**: If the project has documentation (check for `docs/`, `README.md`, OpenAPI specs), compare tool descriptions against it. Flag tools that don't use the project's own terminology or miss important context as `[MEDIUM] Description not informed by project docs`.
+- [ ] **Related tools mentioned**: If a tool is commonly used in sequence with others, the description should mention this. Flag isolated descriptions for tools that clearly participate in workflows as `[LOW] Consider mentioning related tools`.
+
+Present description quality findings in the report alongside security and performance findings.
+
 ### Step 6: Generate Report
 
 Present findings in priority order:
